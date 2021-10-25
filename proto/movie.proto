@@ -1,0 +1,51 @@
+syntax = "proto3";
+package movie;
+
+enum Status {
+	UNKNOWN = 0; //might be finished or ongoing
+	ONGOING = 1;
+	FINISHED = 2;
+	RUMOR = 3;
+}
+message Movie {
+	int32 id = 1;
+	string title = 2;
+	string director = 3;
+	string thumbnail = 5;
+	Status status = 6;
+	string country = 7;
+}
+message SearchMovieReq {
+	int32 id = 1;
+	string title = 2; //support regex
+	string country = 4; //support regex for now. might use static list to add instead
+	Status status = 5;
+	string director = 6; //support regex
+}
+message SearchMovieRes {
+	repeated Movie res = 1;
+}
+//TODO: add userId too decide who can do these ops
+message AddMovieReq {
+	Movie movie = 1;
+}
+message AddMovieRes {}
+message UpdateMovieReq {
+	Movie movie = 1;
+}
+message UpdateMovieRes {}
+message DeleteMovieReq {
+	repeated int32 id = 1;
+}
+message DeleteMovieRes {}
+message GetAllMoviesReq {}
+message GetAllMoviesRes {
+	repeated Movie res = 1;
+}
+service MovieService {
+	rpc AddMovie(AddMovieReq) returns (AddMovieRes) {}
+	rpc SearchMovie(SearchMovieReq) returns (SearchMovieRes) {}
+	rpc UpdateMovie(UpdateMovieReq) returns (UpdateMovieRes) {}
+	rpc DeleteMovie(DeleteMovieReq) returns (DeleteMovieRes) {}
+	rpc GetAllMovies(GetAllMoviesReq) returns (GetAllMoviesRes) {}
+}
