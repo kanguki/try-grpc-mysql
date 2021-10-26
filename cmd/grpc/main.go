@@ -33,8 +33,8 @@ func main() {
 		ConnectString: mysqlConnectStr,
 	}
 	database.Connect()
-	movieService := movie.Netflix{ Db: database }
-	
+	movieService := movie.Netflix{Db: database}
+
 	lis, err := net.Listen("tcp", servicePort)
 	if err != nil {
 		log.Fatalf("Fail to listen to port %v: %v", servicePort, err)

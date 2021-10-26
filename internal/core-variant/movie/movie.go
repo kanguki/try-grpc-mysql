@@ -23,9 +23,9 @@ func (n *Netflix) SearchMovie(ctx context.Context, req *m.SearchMovieReq) (*m.Se
 	if err != nil {
 		return nil, err
 	}
-	var res []*m.Movie
+	var res []*m.MovieRes
 	for i := range results {
-		res = append(res, &results[i])
+		res = append(res, m.MovieToMovieRes(results[i]))
 	}
 	return &m.SearchMovieRes{Res: res}, nil
 }
@@ -48,9 +48,9 @@ func (n *Netflix) GetAllMovies(ctx context.Context, req *m.GetAllMoviesReq) (*m.
 	if err != nil {
 		return nil, err
 	}
-	var res []*m.Movie
+	var res []*m.MovieRes
 	for i := range results {
-		res = append(res, &results[i])
+		res = append(res, m.MovieToMovieRes(results[i]))
 	}
 	return &m.GetAllMoviesRes{Res: res}, nil
 }

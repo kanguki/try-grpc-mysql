@@ -48,17 +48,17 @@ func TestGrpServer(t *testing.T) {
 
 	c := m.NewMovieServiceClient(conn)
 
-	movie := m.Movie{
+	movie := m.MovieToMovieRes(m.Movie{
 		Id:        1,
 		Title:     "Test",
 		Director:  "Mo",
 		Thumbnail: "link",
 		Status:    1,
 		Country:   "America",
-	}
+	})
 	ctx := context.Background()
 	{
-		_, err = c.AddMovie(ctx, &m.AddMovieReq{Movie: &movie})
+		_, err = c.AddMovie(ctx, &m.AddMovieReq{Movie: movie})
 		if err != nil {
 			t.Fatalf("error when calling AddMovie: %s", err)
 		}
@@ -74,7 +74,7 @@ func TestGrpServer(t *testing.T) {
 	}
 	{
 		movie.Country = "Hybe"
-		_, err = c.UpdateMovie(ctx, &m.UpdateMovieReq{Movie: &movie})
+		_, err = c.UpdateMovie(ctx, &m.UpdateMovieReq{Movie: movie})
 		if err != nil {
 			t.Fatalf("error when calling AddMovie: %s", err)
 		}

@@ -3,13 +3,13 @@ package db
 import (
 	"log"
 
-	"gorm.io/driver/mysql"
-  	"gorm.io/gorm"
 	"github.com/kanguki/go-grpc-mysql/internal/core/movie"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 type Mysql struct {
-	Db *gorm.DB
+	Db            *gorm.DB
 	ConnectString string
 }
 
@@ -21,13 +21,13 @@ func (r *Mysql) Connect() {
 	r.Db = db
 }
 
-func (r *Mysql) AddMovie(req *movie.AddMovieReq) (error) {
-	return r.Db.Save(req.Movie).Error
+func (r *Mysql) AddMovie(req *movie.AddMovieReq) error {
+	return r.Db.Save(movie.MovieResToMovie(req.Movie)).Error
 }
 func (r *Mysql) SearchMovie(req *movie.SearchMovieReq) (res []movie.Movie, err error) {
 	qr := r.Db.Model(&movie.Movie{})
 	if req.Status != 0 {
-		qr.Where(&movie.Movie{Status: req.Status})
+		qr.Where(&movie.Movie{Status: movie.Status(req.Status)})
 	}
 	if req.Country != "" {
 		qr.Where("country regexp ?", req.Country)
@@ -44,14 +44,14 @@ func (r *Mysql) SearchMovie(req *movie.SearchMovieReq) (res []movie.Movie, err e
 	err = qr.Find(&res).Error
 	return res, err
 }
-func (r *Mysql) UpdateMovie(req *movie.UpdateMovieReq) (error) {
+func (r *Mysql) UpdateMovie(req *movie.UpdateMovieReq) error {
 	var movieDb movie.Movie
 	err := r.Db.Model(&movie.Movie{}).Where(&movie.Movie{Id: req.Movie.Id}).First(&movieDb).Error
 	if err != nil {
 		return err
 	}
 	if req.Movie.Status != 0 {
-		movieDb.Status = req.Movie.Status
+		movieDb.Status = movie.Status(req.Movie.Status)
 	}
 	if req.Movie.Country != "" {
 		movieDb.Country = req.Movie.Country
@@ -67,7 +67,7 @@ func (r *Mysql) UpdateMovie(req *movie.UpdateMovieReq) (error) {
 	}
 	return r.Db.Save(&movieDb).Error
 }
-func (r *Mysql) DeleteMovie(req *movie.DeleteMovieReq) (error) {
+func (r *Mysql) DeleteMovie(req *movie.DeleteMovieReq) error {
 	return r.Db.Model(&movie.Movie{}).Delete(&movie.Movie{}, req.Id).Error
 }
 func (r *Mysql) GetAllMovies(*movie.GetAllMoviesReq) (res []movie.Movie, err error) {

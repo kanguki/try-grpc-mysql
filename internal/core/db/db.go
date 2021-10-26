@@ -5,9 +5,9 @@ import (
 )
 
 type Database interface {
-	AddMovie(*movie.AddMovieReq) (error) 
+	AddMovie(*movie.AddMovieReq) error
 	SearchMovie(*movie.SearchMovieReq) ([]movie.Movie, error)
-	UpdateMovie(*movie.UpdateMovieReq) (error)
-	DeleteMovie(*movie.DeleteMovieReq) (error)
+	UpdateMovie(*movie.UpdateMovieReq) error
+	DeleteMovie(*movie.DeleteMovieReq) error
 	GetAllMovies(*movie.GetAllMoviesReq) ([]movie.Movie, error)
 }

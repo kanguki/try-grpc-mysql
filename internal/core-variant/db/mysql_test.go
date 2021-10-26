@@ -7,6 +7,7 @@ import (
 )
 
 var db Mysql
+
 func TestMain(t *testing.M) {
 	db = Mysql{
 		ConnectString: "mo:123qwe@tcp(localhost:3306)/movie-grpc",
@@ -17,32 +18,32 @@ func TestMain(t *testing.M) {
 func TestDbMovie(t *testing.T) {
 	arr := []movie.Movie{
 		{
-			Id:                   1,
-			Title:                "5 cm/s",
-			Director:             "Nakamoto",
-			Thumbnail:            "link",
-			Status:               2,
-			Country:              "Japan",
+			Id:        1,
+			Title:     "5 cm/s",
+			Director:  "Nakamoto",
+			Thumbnail: "link",
+			Status:    2,
+			Country:   "Japan",
 		},
 		{
-			Id:                   2,
-			Title:                "Spirited away",
-			Director:             "Nakamoto",
-			Thumbnail:            "link",
-			Status:               2,
-			Country:              "Japan",
+			Id:        2,
+			Title:     "Spirited away",
+			Director:  "Nakamoto",
+			Thumbnail: "link",
+			Status:    2,
+			Country:   "Japan",
 		},
 		{
-			Id:                   3,
-			Title:                "AAA",
-			Director:             "Mo",
-			Thumbnail:            "link",
-			Status:               3,
-			Country:              "Vietnam",
+			Id:        3,
+			Title:     "AAA",
+			Director:  "Mo",
+			Thumbnail: "link",
+			Status:    3,
+			Country:   "Vietnam",
 		},
 	}
 	for i := range arr {
-		err := db.AddMovie(&movie.AddMovieReq{Movie: &arr[i]} )
+		err := db.AddMovie(&movie.AddMovieReq{Movie: movie.MovieToMovieRes(arr[i])})
 		if err != nil {
 			t.Fatalf("error db AddMovie: %v", err)
 		}
@@ -54,7 +55,7 @@ func TestDbMovie(t *testing.T) {
 		}
 		if len(res) < 3 {
 			t.Fatalf("error db GetAllMovies: not retrieve all 3 records")
-		}	
+		}
 	}
 	{
 		res, err := db.SearchMovie(&movie.SearchMovieReq{Title: "5"})
@@ -67,8 +68,8 @@ func TestDbMovie(t *testing.T) {
 	}
 	{
 		err := db.UpdateMovie(&movie.UpdateMovieReq{
-			Movie: &movie.Movie{
-				Id: 3,
+			Movie: &movie.MovieRes{
+				Id:    3,
 				Title: "BBB",
 			},
 		})
@@ -82,5 +83,5 @@ func TestDbMovie(t *testing.T) {
 			t.Fatalf("error db DeleteMovie: %v", err)
 		}
 	}
-	
+
 }
